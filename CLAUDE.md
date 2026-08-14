@@ -40,8 +40,15 @@ schemas/                  change_unit.schema.json exportado (generado, no fuente
 fixtures/generator/       Generador de PDFs sintéticos (reportlab) + ground_truth.json
 config/models.yaml        Configuración del ModelGateway por rol lógico (Fase 1: DMR)
 prompts/                  Prompts versionados, nunca embebidos en código
+scripts/setup.sh          Prerrequisitos + arranque de backend/frontend en local (check|up|down|status)
+scripts/healthcheck.sh    Documenta los servicios y su indicador de correcto funcionamiento
 docs/arquitectura.md      Documento de diseño congelado
 ```
+
+`backend/.env.example` y `frontend/.env.example` documentan la configuración no-secreta
+que `scripts/setup.sh` usa al levantar cada servicio (puertos, `VITE_API_BASE_URL`).
+Fase 1 no tiene credenciales reales — DMR corre local sin autenticación. Cuando WP-11
+(Azure Foundry) añada Entra ID, sus variables se documentan ahí, nunca como api_key.
 
 ## Convención de ramas / PRs
 
