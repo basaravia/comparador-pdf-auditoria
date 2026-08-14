@@ -1,0 +1,26 @@
+# Fase 1: backend + frontend en contenedores. DMR (Docker Model Runner) NO es
+# un servicio de este compose — es una capacidad de Docker Desktop, no algo
+# que se empaquete en un contenedor propio. Desde el host se alcanza en
+# http://localhost:12434/engines/llama.cpp/v1 (ver config/models.yaml); desde
+# un contenedor de esta red, en http://model-runner.docker.internal/engines/llama.cpp/v1.
+# Editar config/models.yaml si el backend corre dentro de Docker.
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./config:/app/config:ro
+      - ./schemas:/app/schemas
+      - ./prompts:/app/prompts:ro
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend

@@ -1,0 +1,607 @@
+{
+  "$defs": {
+    "Analysis": {
+      "additionalProperties": false,
+      "description": "Salida del rol analista_texto/analista_vision (§4, WP-6b).",
+      "properties": {
+        "status": {
+          "default": "skipped",
+          "enum": [
+            "ok",
+            "failed",
+            "skipped",
+            "stale"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "que_cambio": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Que Cambio"
+        },
+        "implicacion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Implicacion"
+        },
+        "direccion": {
+          "anyOf": [
+            {
+              "enum": [
+                "restrictivo",
+                "permisivo",
+                "equivalente",
+                "divergente"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Direccion"
+        },
+        "naturaleza": {
+          "anyOf": [
+            {
+              "enum": [
+                "obligacion",
+                "plazo",
+                "umbral",
+                "alcance",
+                "procedimiento",
+                "definicion",
+                "referencia",
+                "sancion"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Naturaleza"
+        },
+        "efecto_esperado": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Efecto Esperado"
+        },
+        "riesgo_si_no_se_atiende": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Riesgo Si No Se Atiende"
+        },
+        "evidencia": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Evidencia"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "severidad": {
+          "anyOf": [
+            {
+              "enum": [
+                "alta",
+                "media",
+                "baja",
+                "nula"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Severidad"
+        },
+        "requiere_criterio_humano": {
+          "default": false,
+          "title": "Requiere Criterio Humano",
+          "type": "boolean"
+        },
+        "motivo_abstencion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Motivo Abstencion"
+        },
+        "confianza": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confianza"
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Provenance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Analysis",
+      "type": "object"
+    },
+    "Evidencia": {
+      "additionalProperties": false,
+      "description": "Spans literales que sustentan el análisis (§4.7 — grounding).",
+      "properties": {
+        "span_a": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Span A"
+        },
+        "span_b": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Span B"
+        }
+      },
+      "title": "Evidencia",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "prompt_version": {
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "temperature": {
+          "title": "Temperature",
+          "type": "number"
+        },
+        "used_vision": {
+          "title": "Used Vision",
+          "type": "boolean"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "latency_ms": {
+          "title": "Latency Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "provider",
+        "model",
+        "prompt_version",
+        "temperature",
+        "used_vision",
+        "input_hash",
+        "timestamp",
+        "latency_ms"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Review": {
+      "additionalProperties": false,
+      "description": "Estado de revisión humana (§6).",
+      "properties": {
+        "estado": {
+          "default": "pendiente",
+          "enum": [
+            "pendiente",
+            "aceptado",
+            "corregido",
+            "descartado_fp"
+          ],
+          "title": "Estado",
+          "type": "string"
+        },
+        "comentario": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Comentario"
+        },
+        "interpretacion_corregida": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interpretacion Corregida"
+        },
+        "revisor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revisor"
+        },
+        "revisado_en": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revisado En"
+        }
+      },
+      "title": "Review",
+      "type": "object"
+    },
+    "Signals": {
+      "additionalProperties": false,
+      "description": "Señales calculadas sin modelo generativo (§4, WP-6).",
+      "properties": {
+        "delta_lexico": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Lexico"
+        },
+        "delta_semantico": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Delta Semantico"
+        },
+        "cuadrante": {
+          "anyOf": [
+            {
+              "enum": [
+                "trivial",
+                "parafrasis",
+                "critico_oculto",
+                "reescritura"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cuadrante"
+        },
+        "lexico_critico": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lexico Critico",
+          "type": "array"
+        },
+        "elevacion_deterministica": {
+          "default": false,
+          "title": "Elevacion Deterministica",
+          "type": "boolean"
+        },
+        "clase_puntuacion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clase Puntuacion"
+        }
+      },
+      "title": "Signals",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Unidad de todo el sistema — una fila de la tabla de revisión (§2.1).",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "insert",
+        "delete",
+        "replace",
+        "format",
+        "visual",
+        "move"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "page_a": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page A"
+    },
+    "page_b": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page B"
+    },
+    "bbox_a": {
+      "items": {
+        "maxItems": 4,
+        "minItems": 4,
+        "prefixItems": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "type": "array"
+      },
+      "title": "Bbox A",
+      "type": "array"
+    },
+    "bbox_b": {
+      "items": {
+        "maxItems": 4,
+        "minItems": 4,
+        "prefixItems": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "type": "array"
+      },
+      "title": "Bbox B",
+      "type": "array"
+    },
+    "page_size_a": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page Size A"
+    },
+    "page_size_b": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page Size B"
+    },
+    "section_path": {
+      "default": "",
+      "title": "Section Path",
+      "type": "string"
+    },
+    "anchor_confidence": {
+      "default": 1.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Anchor Confidence",
+      "type": "number"
+    },
+    "text_a": {
+      "default": "",
+      "title": "Text A",
+      "type": "string"
+    },
+    "text_b": {
+      "default": "",
+      "title": "Text B",
+      "type": "string"
+    },
+    "context_a": {
+      "default": "",
+      "title": "Context A",
+      "type": "string"
+    },
+    "context_b": {
+      "default": "",
+      "title": "Context B",
+      "type": "string"
+    },
+    "signals": {
+      "$ref": "#/$defs/Signals"
+    },
+    "analysis": {
+      "$ref": "#/$defs/Analysis"
+    },
+    "review": {
+      "$ref": "#/$defs/Review"
+    },
+    "calificacion_analisis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Calificacion Analisis"
+    }
+  },
+  "required": [
+    "id",
+    "run_id",
+    "kind"
+  ],
+  "title": "ChangeUnit",
+  "type": "object"
+}

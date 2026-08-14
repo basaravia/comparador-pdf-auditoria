@@ -1,0 +1,12 @@
+# Configuración del ModelGateway — Fase 1 (DMR local).
+# Ver docs/arquitectura.md §2.2 y §8 (WP-0).
+provider: dmr
+base_url: http://localhost:12434/engines/llama.cpp/v1
+roles:
+  analista_texto:
+    model: "ai/gemma3:12B-Q4_K_M"
+  analista_vision:
+    model: "ai/qwen3-vl:8B"
+  embedder:
+    model: "ai/embeddinggemma"
+concurrency: 4
