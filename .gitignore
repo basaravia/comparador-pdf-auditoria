@@ -26,6 +26,7 @@ data/
 *.sqlite3
 storage/
 fixtures/generated/
+.run/
 
 # OS
 .DS_Store
